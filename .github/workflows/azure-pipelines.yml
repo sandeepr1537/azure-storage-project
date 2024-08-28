@@ -1,0 +1,30 @@
+# azure-pipelines.yml
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UseTerraform@0
+  inputs:
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    command: 'init'
+
+- task: UseTerraform@0
+  inputs:
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    command: 'validate'
+
+- task: UseTerraform@0
+  inputs:
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    command: 'plan'
+    environmentServiceNameAzureRM: 'AzureServiceConnection'
+
+- task: UseTerraform@0
+  inputs:
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    command: 'apply'
+    commandOptions: '-auto-approve'
+    environmentServiceNameAzureRM: 'AzureServiceConnection'
